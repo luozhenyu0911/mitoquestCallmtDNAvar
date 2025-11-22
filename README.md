@@ -5,10 +5,10 @@ The MitoQuest pipeline is a comprehensive set of tools and scripts designed for 
 ## **Workflow Description**
 The MitoQuest pipeline consists of three main analytical stages:
 
-<img src="./VarCallingPipelineUsingMitoquest.jpg" alt="Workflow Diagram" width="500" style="display: block; margin: 0 auto;">
+<img src="./VarCallingPipelineUsingMitoquest.jpg" alt="Workflow Diagram" width="700" style="display: block; margin: 0 auto;">
 
 ### **1. mtDNA Read Extraction**
-This initial step involves extracting mitochondrial DNA reads from CRAM/BAM files that have been aligned to both the nuclear and mitochondrial genomes. This ensures comprehensive capture of mtDNA sequences while addressing the challenge of nuclear mitochondrial sequences (NUMTs) that can cause false positives in variant calling.
+This initial step involves extracting mitochondrial DNA reads from CRAM/BAM files that have been aligned to both the nuclear and mitochondrial genomes during the WGS process. This ensures comprehensive capture of mtDNA sequences while addressing the challenge of nuclear mitochondrial sequences (NUMTs) that can cause false positives in variant calling.
 
 ### **2. mtDNA Realignment**
 The extracted mtDNA undergoes a sophisticated realignment process using a "double alignment" strategy to account for the circular nature of the mitochondrial genome:
@@ -27,6 +27,16 @@ The final stage performs comprehensive variant calling on the realigned mtDNA se
 The pipeline leverages specialized in-house variant callers, and subsequently merges the variants detected from both alignments to generate a comprehensive variant set.
 
 ## **Quick Start**
+First, place the input CRAM/BAM files—pre-aligned to both nuclear and mitochondrial genomes during whole-genome sequencing (WGS) analyses — into the input/cram/directory.
+```bash
+$ tree input/cram/
+    input/cram/
+    |-- 00113051204M47BFF2.sorted.markdup.BQSR.cram
+    |-- 00113051204M47BFF2.sorted.markdup.BQSR.cram.crai
+    |-- 00115101162M16BFF2.sorted.markdup.BQSR.cram
+    `-- 00115101162M16BFF2.sorted.markdup.BQSR.cram.crai
+```
+
 ```bash
 sh run_snakemake.sh
 ```
