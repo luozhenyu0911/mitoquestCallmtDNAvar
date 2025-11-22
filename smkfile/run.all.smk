@@ -1,0 +1,35 @@
+# include the config file
+configfile: "config.yaml"
+
+(sampleNameList,) = glob_wildcards("input/cram/{sampleName}.sorted.markdup.BQSR.cram")
+
+
+# define a function to return target files based on config settings
+def run_all_input(wildcards):
+
+    run_all_files = []
+    
+    if config['modules']['extract_reads']:
+        run_all_files.extend(expand("input/fastq/{sampleName}.mtDNA.R1.fastq.gz", sampleName=sampleNameList))
+        run_all_files.extend(expand("input/fastq/{sampleName}.mtDNA.R2.fastq.gz", sampleName=sampleNameList))
+
+    if config['modules']['alignment']:
+        run_all_files.extend(expand("input/mtDNA_cram/{sampleName}.raw.cram", sampleName=sampleNameList)),
+        run_all_files.extend(expand("input/mtDNA_cram/{sampleName}.raw.cram.crai", sampleName=sampleNameList)),
+        run_all_files.extend(expand("input/mtDNA_cram/{sampleName}.shifted.cram", sampleName=sampleNameList)),
+        run_all_files.extend(expand("input/mtDNA_cram/{sampleName}.shifted.cram.crai", sampleName=sampleNameList)),
+        
+
+    if config['modules']['var_calling']:
+        run_all_files.append("output/01.mito_vcf/{id}.samples.vcf".format(id = config['samples']['id']))
+
+    return run_all_files
+
+# rule run all, the files above are the targets for snakemake
+rule run_all:
+    input:
+        run_all_input
+smk_path = config['params']['smk_path']
+include: smk_path+"/1.ExtractMtDNAReads.smk"
+include: smk_path+"/2.AlignmentMtDNA.smk"
+include: smk_path+"/3.VariantCalling.smk"
