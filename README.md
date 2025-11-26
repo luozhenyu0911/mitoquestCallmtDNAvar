@@ -27,7 +27,7 @@ The final stage performs comprehensive variant calling on the realigned mtDNA se
 The pipeline leverages specialized in-house variant callers, and subsequently merges the variants detected from both alignments to generate a comprehensive variant set.
 
 ## **Quick Start**
-First, place the input CRAM/BAM files—pre-aligned to both nuclear and mitochondrial genomes during whole-genome sequencing (WGS) analyses — into the input/cram/directory.
+Firstly, put the input CRAM or BAM files—pre-aligned to both nuclear and mitochondrial genomes during whole-genome sequencing (WGS) analyses — into the input/cram/
 ```bash
 $ tree input/cram/
     input/cram/
@@ -38,7 +38,8 @@ $ tree input/cram/
 ```
 
 ```bash
-sh run_snakemake.sh
+smk=./run.all.smk
+snakemake -c $threads -pk -s ${smk} 2> snakemake.err.txt
 ```
 
 ## **Prerequisites**
@@ -47,6 +48,7 @@ sh run_snakemake.sh
 - SAMtools​ - BAM/CRAM file manipulation and indexing 
 - BWA​ (Burrows-Wheeler Aligner) - Sequence alignment 
 - MitoQuest​ - Custom mitochondrial DNA analysis tools
+- Snakemake​ - Pipeline management and execution 
 - Python 3​ - Pipeline execution and scripting
 
 ### **Reference Files**

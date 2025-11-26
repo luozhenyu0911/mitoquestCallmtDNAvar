@@ -1,8 +1,25 @@
 # include the config file
 configfile: "config.yaml"
 
-(sampleNameList,) = glob_wildcards("input/cram/{sampleName}.sorted.markdup.BQSR.cram")
+import os
 
+def check_cram_files_os(folder_path):
+    if not os.path.exists(folder_path):
+        print(f"Warning: Folder '{folder_path}' does not exist.")
+        raise Exception("Folder does not exist.")
+    all_entries = os.listdir(folder_path)
+    
+    for entry in all_entries:
+        full_path = os.path.join(folder_path, entry)
+        if os.path.isfile(full_path) and entry.endswith('.cram'):
+            return True
+    return False
+
+folder = "input/cram/"
+if check_cram_files_os(folder):
+    (sampleNameList,) = glob_wildcards("input/cram/{sampleName}.cram")
+else:
+    (sampleNameList,) = glob_wildcards("input/cram/{sampleName}.bam")
 
 # define a function to return target files based on config settings
 def run_all_input(wildcards):
